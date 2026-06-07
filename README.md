@@ -1,2 +1,3 @@
-Integrantes
-Alberto Mario Hernandez Calderon
+Integrantes:
++Alberto Mario Hernandez Calderon
++Stiven david Hernández Pabón
