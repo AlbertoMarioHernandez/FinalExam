@@ -12,14 +12,9 @@ public class SaleRepository {
 
     private static final String PATH = "data/data.json";
     private final Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
-            .registerTypeAdapter(java.time.LocalDateTime.class,
-                    (JsonSerializer<java.time.LocalDateTime>) (src, t, ctx) ->
-                            new JsonPrimitive(src.toString()))
-            .registerTypeAdapter(java.time.LocalDateTime.class,
-                    (JsonDeserializer<java.time.LocalDateTime>) (json, t, ctx) ->
-                            java.time.LocalDateTime.parse(json.getAsString()))
-            .create();
+                    .setPrettyPrinting().registerTypeAdapter(java.time.LocalDateTime.class, (JsonSerializer<java.time.LocalDateTime>) (src, t, ctx) ->
+                    new JsonPrimitive(src.toString())).registerTypeAdapter(java.time.LocalDateTime.class,
+                    (JsonDeserializer<java.time.LocalDateTime>) (json, t, ctx) -> java.time.LocalDateTime.parse(json.getAsString())).create();
 
     private JsonObject readJson() {
         File file = new File(PATH);
@@ -75,11 +70,4 @@ public class SaleRepository {
         addToJson(sale);
     }
 
-    public Sale findById(String id) {
-        ArrayList<Sale> list = loadSales();
-        for (Sale s : list) {
-            if (s.getId().equals(id)) return s;
-        }
-        return null;
-    }
 }

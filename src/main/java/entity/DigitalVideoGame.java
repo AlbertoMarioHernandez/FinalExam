@@ -11,10 +11,18 @@ public class DigitalVideoGame extends VideoGame {
         this.downloadPlatform = downloadPlatform;
     }
 
-    public double getSizeGB() { return sizeGB; }
-    public String getDownloadPlatform() { return downloadPlatform; }
-    public void setSizeGB(double sizeGB) { this.sizeGB = sizeGB; }
-    public void setDownloadPlatform(String downloadPlatform) { this.downloadPlatform = downloadPlatform; }
+    public double getSizeGB() {
+        return sizeGB;
+    }
+    public String getDownloadPlatform() {
+        return downloadPlatform;
+    }
+    public void setSizeGB(double sizeGB) {
+        this.sizeGB = sizeGB;
+    }
+    public void setDownloadPlatform(String downloadPlatform) {
+        this.downloadPlatform = downloadPlatform;
+    }
 
     @Override
     public double calculateFinalPrice() {
@@ -23,7 +31,6 @@ public class DigitalVideoGame extends VideoGame {
         }
         return price;
     }
-
 
 
     @Override

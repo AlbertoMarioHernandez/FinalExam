@@ -11,8 +11,6 @@ public class VideoGameServiceImpl implements IDigitalVideoGameService, IPhysical
 
     private final VideoGameRepository repository = new VideoGameRepository();
 
-
-
     private void validateVideoGame(String title, double price, int stock) {
         if (title == null || title.trim().isEmpty())
             throw new IllegalArgumentException("El título no puede ser nulo o vacío.");
@@ -22,11 +20,11 @@ public class VideoGameServiceImpl implements IDigitalVideoGameService, IPhysical
             throw new IllegalArgumentException("El stock no puede ser negativo o igual a 0.");
     }
 
-    private void showAlert(String header, String message) {
+    private void showAlert() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Aviso");
-        alert.setHeaderText(header);
-        alert.setContentText(message);
+        alert.setHeaderText("Videojuego duplicado");
+        alert.setContentText("El videojuego ya existe en el catálogo.");
         alert.showAndWait();
     }
 
@@ -35,7 +33,7 @@ public class VideoGameServiceImpl implements IDigitalVideoGameService, IPhysical
         validateVideoGame(game.getTitle(), game.getPrice(), game.getStock());
 
         if (repository.findDigitalByTitle(game.getTitle()) != null) {
-            showAlert("Videojuego duplicado", "El videojuego ya existe en el catálogo.");
+            showAlert();
             return;
         }
 
@@ -67,7 +65,7 @@ public class VideoGameServiceImpl implements IDigitalVideoGameService, IPhysical
         validateVideoGame(game.getTitle(), game.getPrice(), game.getStock());
 
         if (repository.findPhysicalByTitle(game.getTitle()) != null) {
-            showAlert("Videojuego duplicado", "El videojuego ya existe en el catálogo.");
+            showAlert();
             return;
         }
 
