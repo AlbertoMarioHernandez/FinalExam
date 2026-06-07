@@ -1,5 +1,35 @@
 {
-  "digitalVideoGames": [],
-  "physicalVideoGames": [],
-  "sales": []
+  "digitalVideoGames": [
+    {
+      "sizeGB": 68.0,
+      "downloadPlatform": "Steam",
+      "title": "GOD OF WAR",
+      "price": 60000.0,
+      "platform": "Steam",
+      "stock": 47,
+      "genre": "Accion"
+    }
+  ],
+  "physicalVideoGames": [
+    {
+      "condition": "usado",
+      "distributor": "Alberto",
+      "title": "Uncharted",
+      "price": 100000.0,
+      "platform": "Unity",
+      "stock": 10,
+      "genre": "OpenWorld"
+    }
+  ],
+  "sales": [
+    {
+      "id": "S-1780816846670",
+      "videoGameTitle": "GOD OF WAR",
+      "videoGameType": "Digital",
+      "quantity": 2,
+      "unitPrice": 65000.0,
+      "total": 130000.0,
+      "saleDate": "2026-06-07T02:20:46.688862800"
+    }
+  ]
 }

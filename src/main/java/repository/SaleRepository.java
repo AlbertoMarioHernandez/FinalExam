@@ -11,13 +11,15 @@ import java.util.ArrayList;
 public class SaleRepository {
 
     private static final String PATH = "data/data.json";
-    private final Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(java.time.LocalDateTime.class,
-                    (JsonSerializer<java.time.LocalDateTime>) (src, t, ctx) -> new JsonPrimitive(src.toString()))
-            .registerTypeAdapter(java.time.LocalDateTime.class, (JsonDeserializer<java.time.LocalDateTime>) (json, t, ctx) -> java.time.LocalDateTime.parse(json.getAsString())).create();
-
-    // ================================================================
-    //  BASE JSON FUNCTIONS
-    // ================================================================
+    private final Gson gson = new GsonBuilder()
+            .setPrettyPrinting()
+            .registerTypeAdapter(java.time.LocalDateTime.class,
+                    (JsonSerializer<java.time.LocalDateTime>) (src, t, ctx) ->
+                            new JsonPrimitive(src.toString()))
+            .registerTypeAdapter(java.time.LocalDateTime.class,
+                    (JsonDeserializer<java.time.LocalDateTime>) (json, t, ctx) ->
+                            java.time.LocalDateTime.parse(json.getAsString()))
+            .create();
 
     private JsonObject readJson() {
         File file = new File(PATH);
@@ -54,10 +56,6 @@ public class SaleRepository {
         return false;
     }
 
-    // ================================================================
-    //  INTERNAL WRITE
-    // ================================================================
-
     private void writeJson(JsonObject root) {
         File file = new File(PATH);
         file.getParentFile().mkdirs();
@@ -76,20 +74,12 @@ public class SaleRepository {
         return obj;
     }
 
-    // ================================================================
-    //  LOAD ARRAYLIST FROM JSON
-    // ================================================================
-
     private ArrayList<Sale> loadSales() {
         JsonObject root = readJson();
         Type type = new TypeToken<ArrayList<Sale>>(){}.getType();
         ArrayList<Sale> list = gson.fromJson(root.get("sales"), type);
         return list != null ? list : new ArrayList<>();
     }
-
-    // ================================================================
-    //  SALE OPERATIONS
-    // ================================================================
 
     public ArrayList<Sale> getAll() {
         return loadSales();
@@ -105,7 +95,7 @@ public class SaleRepository {
 
     public boolean delete(String id) {
         ArrayList<Sale> list = loadSales();
-        boolean removed = list.removeIf(s -> s.getId().equalsIgnoreCase(id));
+        boolean removed = list.removeIf(s -> s.getId().equals(id));
         if (removed) {
             JsonObject root = readJson();
             root.add("sales", gson.toJsonTree(list));
@@ -117,7 +107,7 @@ public class SaleRepository {
     public Sale findById(String id) {
         ArrayList<Sale> list = loadSales();
         for (Sale s : list) {
-            if (s.getId().equalsIgnoreCase(id)) return s;
+            if (s.getId().equals(id)) return s;
         }
         return null;
     }
