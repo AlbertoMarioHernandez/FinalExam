@@ -6,8 +6,26 @@
       "title": "GOD OF WAR",
       "price": 60000.0,
       "platform": "Steam",
-      "stock": 48,
+      "stock": 47,
       "genre": "Accion"
+    },
+    {
+      "sizeGB": 51.0,
+      "downloadPlatform": "Steam",
+      "title": "GTA V",
+      "price": 60000.0,
+      "platform": "PS5",
+      "stock": 15,
+      "genre": "OpenWorld"
+    },
+    {
+      "sizeGB": 40.0,
+      "downloadPlatform": "Mycrosoft",
+      "title": "Call of Duty:Black Ops",
+      "price": 40000.0,
+      "platform": "PC",
+      "stock": 0,
+      "genre": "Shooter"
     }
   ],
   "physicalVideoGames": [
@@ -19,6 +37,15 @@
       "platform": "Unity",
       "stock": 10,
       "genre": "OpenWorld"
+    },
+    {
+      "condition": "usado",
+      "distributor": "Sony",
+      "title": "Resident Evil",
+      "price": 30000.0,
+      "platform": "PS3",
+      "stock": 4,
+      "genre": "Zombies"
     }
   ],
   "sales": [
@@ -30,6 +57,24 @@
       "unitPrice": 65000.0,
       "total": 130000.0,
       "saleDate": "2026-06-07T02:20:46.688862800"
+    },
+    {
+      "id": "S-1780865684138",
+      "videoGameTitle": "GOD OF WAR",
+      "videoGameType": "Digital",
+      "quantity": 1,
+      "unitPrice": 65000.0,
+      "total": 65000.0,
+      "saleDate": "2026-06-07T15:54:44.167391300"
+    },
+    {
+      "id": "S-1780866552369",
+      "videoGameTitle": "Call of Duty:Black Ops",
+      "videoGameType": "Digital",
+      "quantity": 5,
+      "unitPrice": 40000.0,
+      "total": 200000.0,
+      "saleDate": "2026-06-07T16:09:12.381979100"
     }
   ]
 }

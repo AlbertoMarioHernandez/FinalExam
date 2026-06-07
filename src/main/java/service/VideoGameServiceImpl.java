@@ -18,8 +18,8 @@ public class VideoGameServiceImpl implements IDigitalVideoGameService, IPhysical
             throw new IllegalArgumentException("El título no puede ser nulo o vacío.");
         if (price <= 0)
             throw new IllegalArgumentException("El precio debe ser mayor a 0.");
-        if (stock < 0)
-            throw new IllegalArgumentException("El stock no puede ser negativo.");
+        if (stock <= 0)
+            throw new IllegalArgumentException("El stock no puede ser negativo o igual a 0.");
     }
 
     private void showAlert(String header, String message) {
