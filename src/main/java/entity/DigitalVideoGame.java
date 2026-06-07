@@ -24,19 +24,7 @@ public class DigitalVideoGame extends VideoGame {
         return price;
     }
 
-    public double sell(int qty) {
-        if (qty > stock) throw new IllegalArgumentException("Stock insuficiente");
-        stock -= qty;
-        return calculateFinalPrice() * qty;
-    }
 
-    public String getDisplayInfo() {
-        return "Digital | " + title + " | " + platform + " | $" + calculateFinalPrice() + " | " + sizeGB + " GB | " + downloadPlatform;
-    }
-
-    public Object[] toTableRow() {
-        return new Object[]{title, platform, genre, sizeGB + " GB", downloadPlatform, calculateFinalPrice(), stock};
-    }
 
     @Override
     public String toString() {

@@ -41,20 +41,6 @@ public class SaleRepository {
         writeJson(root);
     }
 
-    private boolean updateJson(String id, Sale updatedSale) {
-        JsonObject root = readJson();
-        JsonArray array = root.getAsJsonArray("sales");
-        for (int i = 0; i < array.size(); i++) {
-            JsonObject item = array.get(i).getAsJsonObject();
-            if (item.get("id").getAsString().equals(id)) {
-                array.set(i, gson.toJsonTree(updatedSale));
-                root.add("sales", array);
-                writeJson(root);
-                return true;
-            }
-        }
-        return false;
-    }
 
     private void writeJson(JsonObject root) {
         File file = new File(PATH);
@@ -87,21 +73,6 @@ public class SaleRepository {
 
     public void save(Sale sale) {
         addToJson(sale);
-    }
-
-    public boolean update(String id, Sale updatedSale) {
-        return updateJson(id, updatedSale);
-    }
-
-    public boolean delete(String id) {
-        ArrayList<Sale> list = loadSales();
-        boolean removed = list.removeIf(s -> s.getId().equals(id));
-        if (removed) {
-            JsonObject root = readJson();
-            root.add("sales", gson.toJsonTree(list));
-            writeJson(root);
-        }
-        return removed;
     }
 
     public Sale findById(String id) {

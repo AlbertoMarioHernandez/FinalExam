@@ -31,59 +31,65 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("GameZone");
-        primaryStage.setMinWidth(860);
-        primaryStage.setMinHeight(580);
+        primaryStage.setMinWidth(900);
+        primaryStage.setMinHeight(600);
 
         TabPane tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         tabPane.getTabs().addAll(
-                new Tab("Digitales", buildDigitalTab()),
-                new Tab("Físicos",   buildPhysicalTab()),
-                new Tab("Buscar",    buildSearchTab()),
-                new Tab("Ventas",    buildSalesTab())
+                new Tab("Videojuegos",       buildVideoGamesTab()),
+                new Tab("Listar Todos",       buildListAllTab()),
+                new Tab("Buscar por Título",  buildSearchByTitleTab()),
+                new Tab("Buscar Plataforma",  buildSearchByPlatformTab()),
+                new Tab("Realizar Venta",     buildSellTab()),
+                new Tab("Mostrar Ventas",     buildSalesTab())
         );
 
         primaryStage.setScene(new Scene(tabPane, 960, 600));
         primaryStage.show();
     }
 
-    private VBox buildDigitalTab() {
-        TableView<DigitalVideoGame> table = new TableView<>();
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        TableColumn<DigitalVideoGame, String>  colTitle    = col("Título",      "title");
-        TableColumn<DigitalVideoGame, String>  colPlatform = col("Plataforma",  "platform");
-        TableColumn<DigitalVideoGame, String>  colGenre    = col("Género",      "genre");
-        TableColumn<DigitalVideoGame, Integer> colStock    = col("Stock",       "stock");
-        TableColumn<DigitalVideoGame, Double>  colSize     = col("Tamaño GB",   "sizeGB");
-        TableColumn<DigitalVideoGame, String>  colDl       = col("Descarga en", "downloadPlatform");
+    private VBox buildVideoGamesTab() {
+        Label lblDigital = new Label("Videojuegos Digitales");
+        lblDigital.setStyle("-fx-font-weight: bold;");
 
-        TableColumn<DigitalVideoGame, Double> colPrice = new TableColumn<>("Precio Base");
-        colPrice.setCellValueFactory(d ->
-                new SimpleDoubleProperty(d.getValue().getPrice()).asObject());
+        TableView<DigitalVideoGame> digitalTable = new TableView<>();
+        digitalTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        digitalTable.setPrefHeight(220);
 
-        TableColumn<DigitalVideoGame, Double> colFinal = new TableColumn<>("Precio Final");
-        colFinal.setCellValueFactory(d ->
+        TableColumn<DigitalVideoGame, String>  dColTitle    = col("Título",      "title");
+        TableColumn<DigitalVideoGame, String>  dColPlatform = col("Plataforma",  "platform");
+        TableColumn<DigitalVideoGame, String>  dColGenre    = col("Género",      "genre");
+        TableColumn<DigitalVideoGame, Integer> dColStock    = col("Stock",       "stock");
+        TableColumn<DigitalVideoGame, Double>  dColSize     = col("GB",          "sizeGB");
+        TableColumn<DigitalVideoGame, String>  dColDl       = col("Descarga en", "downloadPlatform");
+        TableColumn<DigitalVideoGame, Double>  dColFinal    = new TableColumn<>("Precio Final");
+        dColFinal.setCellValueFactory(d ->
                 new SimpleDoubleProperty(d.getValue().calculateFinalPrice()).asObject());
 
-        table.getColumns().addAll(colTitle, colPlatform, colGenre, colStock, colSize, colDl, colPrice, colFinal);
-
+        digitalTable.getColumns().addAll(dColTitle, dColPlatform, dColGenre, dColStock, dColSize, dColDl, dColFinal);
         digitalList = FXCollections.observableArrayList();
-        refreshDigital();
-        table.setItems(digitalList);
+        digitalTable.setItems(digitalList);
 
-        Button btnAdd    = new Button("Agregar");
-        Button btnEdit   = new Button("Editar");
-        Button btnDelete = new Button("Eliminar");
+        Button btnAddDigital    = new Button("Agregar Digital");
+        Button btnEditDigital   = new Button("Editar Digital");
+        Button btnDeleteDigital = new Button("Eliminar Digital");
+        Button btnListDigital   = new Button("Listar Digitales");
 
-        btnAdd.setOnAction(e -> showDigitalForm(null, table.getScene().getWindow()));
-        btnEdit.setOnAction(e -> {
-            DigitalVideoGame sel = table.getSelectionModel().getSelectedItem();
+        btnListDigital.setOnAction(e -> refreshDigital());
+
+        btnAddDigital.setOnAction(e ->
+                showDigitalForm(null, digitalTable.getScene().getWindow()));
+
+        btnEditDigital.setOnAction(e -> {
+            DigitalVideoGame sel = digitalTable.getSelectionModel().getSelectedItem();
             if (sel == null) { showWarn("Selecciona un videojuego para editar."); return; }
-            showDigitalForm(sel, table.getScene().getWindow());
+            showDigitalForm(sel, digitalTable.getScene().getWindow());
         });
-        btnDelete.setOnAction(e -> {
-            DigitalVideoGame sel = table.getSelectionModel().getSelectedItem();
+
+        btnDeleteDigital.setOnAction(e -> {
+            DigitalVideoGame sel = digitalTable.getSelectionModel().getSelectedItem();
             if (sel == null) { showWarn("Selecciona un videojuego para eliminar."); return; }
             confirmDelete(sel.getTitle(), () -> {
                 try {
@@ -94,13 +100,70 @@ public class Main extends Application {
             });
         });
 
-        HBox toolbar = new HBox(8, btnAdd, btnEdit, btnDelete);
-        toolbar.setPadding(new Insets(8));
-        VBox tab = new VBox(4, toolbar, table);
-        VBox.setVgrow(table, Priority.ALWAYS);
-        tab.setPadding(new Insets(8));
+        HBox digitalToolbar = new HBox(8, btnAddDigital, btnEditDigital, btnDeleteDigital, btnListDigital);
+        digitalToolbar.setPadding(new Insets(6, 0, 6, 0));
+
+        Label lblPhysical = new Label("Videojuegos Físicos");
+        lblPhysical.setStyle("-fx-font-weight: bold;");
+
+        TableView<PhysicalVideoGame> physicalTable = new TableView<>();
+        physicalTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        physicalTable.setPrefHeight(220);
+
+        TableColumn<PhysicalVideoGame, String>  pColTitle    = col("Título",       "title");
+        TableColumn<PhysicalVideoGame, String>  pColPlatform = col("Plataforma",   "platform");
+        TableColumn<PhysicalVideoGame, String>  pColGenre    = col("Género",       "genre");
+        TableColumn<PhysicalVideoGame, Integer> pColStock    = col("Stock",        "stock");
+        TableColumn<PhysicalVideoGame, String>  pColCond     = col("Condición",    "condition");
+        TableColumn<PhysicalVideoGame, String>  pColDist     = col("Distribuidor", "distributor");
+        TableColumn<PhysicalVideoGame, Double>  pColFinal    = new TableColumn<>("Precio Final");
+        pColFinal.setCellValueFactory(d ->
+                new SimpleDoubleProperty(d.getValue().calculateFinalPrice()).asObject());
+
+        physicalTable.getColumns().addAll(pColTitle, pColPlatform, pColGenre, pColStock, pColCond, pColDist, pColFinal);
+        physicalList = FXCollections.observableArrayList();
+        physicalTable.setItems(physicalList);
+
+        Button btnAddPhysical    = new Button("Agregar Físico");
+        Button btnEditPhysical   = new Button("Editar Físico");
+        Button btnDeletePhysical = new Button("Eliminar Físico");
+        Button btnListPhysical   = new Button("Listar Físicos");
+
+        btnListPhysical.setOnAction(e -> refreshPhysical());
+
+        btnAddPhysical.setOnAction(e -> showPhysicalForm(null, physicalTable.getScene().getWindow()));
+
+        btnEditPhysical.setOnAction(e -> {
+            PhysicalVideoGame sel = physicalTable.getSelectionModel().getSelectedItem();
+            if (sel == null) { showWarn("Selecciona un videojuego para editar."); return; }
+            showPhysicalForm(sel, physicalTable.getScene().getWindow());
+        });
+
+        btnDeletePhysical.setOnAction(e -> {
+            PhysicalVideoGame sel = physicalTable.getSelectionModel().getSelectedItem();
+            if (sel == null) { showWarn("Selecciona un videojuego para eliminar."); return; }
+            confirmDelete(sel.getTitle(), () -> {
+                try {
+                    if (videoGameService.deletePhysicalVideoGame(sel.getTitle()))
+                    { showInfo("Videojuego eliminado."); refreshPhysical(); }
+                    else showWarn("No se encontró el videojuego.");
+                } catch (Exception ex) { showError("Error al eliminar", ex.getMessage()); }
+            });
+        });
+
+        HBox physicalToolbar = new HBox(8, btnAddPhysical, btnEditPhysical, btnDeletePhysical, btnListPhysical);
+        physicalToolbar.setPadding(new Insets(6, 0, 6, 0));
+
+        VBox tab = new VBox(6,
+                lblDigital, digitalToolbar, digitalTable,
+                new Separator(),
+                lblPhysical, physicalToolbar, physicalTable
+        );
+        tab.setPadding(new Insets(10));
         return tab;
     }
+
+
 
     private void showDigitalForm(DigitalVideoGame ex, javafx.stage.Window owner) {
         Stage d = dialog(owner, ex == null ? "Agregar Digital" : "Editar Digital");
@@ -157,60 +220,7 @@ public class Main extends Application {
         d.showAndWait();
     }
 
-    private VBox buildPhysicalTab() {
-        TableView<PhysicalVideoGame> table = new TableView<>();
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        TableColumn<PhysicalVideoGame, String>  colTitle    = col("Título",       "title");
-        TableColumn<PhysicalVideoGame, String>  colPlatform = col("Plataforma",   "platform");
-        TableColumn<PhysicalVideoGame, String>  colGenre    = col("Género",       "genre");
-        TableColumn<PhysicalVideoGame, Integer> colStock    = col("Stock",        "stock");
-        TableColumn<PhysicalVideoGame, String>  colCond     = col("Condición",    "condition");
-        TableColumn<PhysicalVideoGame, String>  colDist     = col("Distribuidor", "distributor");
-
-        TableColumn<PhysicalVideoGame, Double> colPrice = new TableColumn<>("Precio Base");
-        colPrice.setCellValueFactory(d ->
-                new SimpleDoubleProperty(d.getValue().getPrice()).asObject());
-
-        TableColumn<PhysicalVideoGame, Double> colFinal = new TableColumn<>("Precio Final");
-        colFinal.setCellValueFactory(d ->
-                new SimpleDoubleProperty(d.getValue().calculateFinalPrice()).asObject());
-
-        table.getColumns().addAll(colTitle, colPlatform, colGenre, colStock, colCond, colDist, colPrice, colFinal);
-
-        physicalList = FXCollections.observableArrayList();
-        refreshPhysical();
-        table.setItems(physicalList);
-
-        Button btnAdd    = new Button("Agregar");
-        Button btnEdit   = new Button("Editar");
-        Button btnDelete = new Button("Eliminar");
-
-        btnAdd.setOnAction(e -> showPhysicalForm(null, table.getScene().getWindow()));
-        btnEdit.setOnAction(e -> {
-            PhysicalVideoGame sel = table.getSelectionModel().getSelectedItem();
-            if (sel == null) { showWarn("Selecciona un videojuego para editar."); return; }
-            showPhysicalForm(sel, table.getScene().getWindow());
-        });
-        btnDelete.setOnAction(e -> {
-            PhysicalVideoGame sel = table.getSelectionModel().getSelectedItem();
-            if (sel == null) { showWarn("Selecciona un videojuego para eliminar."); return; }
-            confirmDelete(sel.getTitle(), () -> {
-                try {
-                    if (videoGameService.deletePhysicalVideoGame(sel.getTitle()))
-                    { showInfo("Videojuego eliminado."); refreshPhysical(); }
-                    else showWarn("No se encontró el videojuego.");
-                } catch (Exception ex) { showError("Error al eliminar", ex.getMessage()); }
-            });
-        });
-
-        HBox toolbar = new HBox(8, btnAdd, btnEdit, btnDelete);
-        toolbar.setPadding(new Insets(8));
-        VBox tab = new VBox(4, toolbar, table);
-        VBox.setVgrow(table, Priority.ALWAYS);
-        tab.setPadding(new Insets(8));
-        return tab;
-    }
 
     private void showPhysicalForm(PhysicalVideoGame ex, javafx.stage.Window owner) {
         Stage d = dialog(owner, ex == null ? "Agregar Físico" : "Editar Físico");
@@ -267,28 +277,88 @@ public class Main extends Application {
         d.showAndWait();
     }
 
-    private VBox buildSearchTab() {
-        Label lblTitle     = new Label("Buscar por título:");
+
+    private VBox buildListAllTab() {
+        Label lblDigital = new Label("Videojuegos Digitales");
+        lblDigital.setStyle("-fx-font-weight: bold;");
+
+        TableView<DigitalVideoGame> dTable = new TableView<>();
+        dTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        dTable.setPrefHeight(210);
+
+        TableColumn<DigitalVideoGame, String>  c1 = col("Título",      "title");
+        TableColumn<DigitalVideoGame, String>  c2 = col("Plataforma",  "platform");
+        TableColumn<DigitalVideoGame, String>  c3 = col("Género",      "genre");
+        TableColumn<DigitalVideoGame, Integer> c4 = col("Stock",       "stock");
+        TableColumn<DigitalVideoGame, Double>  c5 = col("GB",          "sizeGB");
+        TableColumn<DigitalVideoGame, String>  c6 = col("Descarga en", "downloadPlatform");
+        TableColumn<DigitalVideoGame, Double>  c7 = new TableColumn<>("Precio Final");
+        c7.setCellValueFactory(d -> new SimpleDoubleProperty(d.getValue().calculateFinalPrice()).asObject());
+        dTable.getColumns().addAll(c1, c2, c3, c4, c5, c6, c7);
+        ObservableList<DigitalVideoGame> dList = FXCollections.observableArrayList();
+        dTable.setItems(dList);
+
+        Label lblPhysical = new Label("Videojuegos Físicos");
+        lblPhysical.setStyle("-fx-font-weight: bold;");
+
+        TableView<PhysicalVideoGame> pTable = new TableView<>();
+        pTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        pTable.setPrefHeight(210);
+
+        TableColumn<PhysicalVideoGame, String>  p1 = col("Título",       "title");
+        TableColumn<PhysicalVideoGame, String>  p2 = col("Plataforma",   "platform");
+        TableColumn<PhysicalVideoGame, String>  p3 = col("Género",       "genre");
+        TableColumn<PhysicalVideoGame, Integer> p4 = col("Stock",        "stock");
+        TableColumn<PhysicalVideoGame, String>  p5 = col("Condición",    "condition");
+        TableColumn<PhysicalVideoGame, String>  p6 = col("Distribuidor", "distributor");
+        TableColumn<PhysicalVideoGame, Double>  p7 = new TableColumn<>("Precio Final");
+        p7.setCellValueFactory(d -> new SimpleDoubleProperty(d.getValue().calculateFinalPrice()).asObject());
+        pTable.getColumns().addAll(p1, p2, p3, p4, p5, p6, p7);
+        ObservableList<PhysicalVideoGame> pList = FXCollections.observableArrayList();
+        pTable.setItems(pList);
+
+        Button btnListAll = new Button("Listar Todos los Juegos");
+        btnListAll.setOnAction(e -> {
+            try {
+                dList.setAll(videoGameService.getAllDigital());
+                pList.setAll(videoGameService.getAllPhysical());
+            } catch (Exception ex) { showError("Error al listar", ex.getMessage()); }
+        });
+
+        VBox tab = new VBox(8,
+                btnListAll,
+                new Separator(),
+                lblDigital, dTable,
+                new Separator(),
+                lblPhysical, pTable
+        );
+        tab.setPadding(new Insets(10));
+        return tab;
+    }
+
+    private VBox buildSearchByTitleTab() {
+        Label lbl          = new Label("Búsqueda por Título:");
         TextField txtTitle = new TextField();
-        txtTitle.setPromptText("Título del videojuego");
-        txtTitle.setPrefWidth(300);
-        Button btnTitle    = new Button("Buscar");
+        txtTitle.setPromptText("Escribe el título del videojuego");
+        txtTitle.setPrefWidth(320);
+        Button btnSearch   = new Button("Buscar por Título");
 
-        String[] digitalHeaders  = {"Título", "Plataforma", "Género", "Stock", "Tamaño GB",  "Descarga en",  "Precio Base", "Precio Final"};
-        String[] physicalHeaders = {"Título", "Plataforma", "Género", "Stock", "Condición",  "Distribuidor", "Precio Base", "Precio Final"};
+        String[] digitalHeaders  = {"Título", "Plataforma", "Género", "Stock", "Tamaño GB", "Descarga en",  "Precio Base", "Precio Final"};
+        String[] physicalHeaders = {"Título", "Plataforma", "Género", "Stock", "Condición", "Distribuidor", "Precio Base", "Precio Final"};
 
-        Label typeLabel    = new Label("");
-        Label[] headers    = new Label[8];
-        Label[] data       = new Label[8];
-        Label noResult     = new Label("");
+        Label typeLabel = new Label("");
+        typeLabel.setStyle("-fx-font-weight: bold;");
+        Label[] headers = new Label[8];
+        Label[] data    = new Label[8];
+        Label noResult  = new Label("");
 
         GridPane resultGrid = new GridPane();
         resultGrid.setHgap(16);
-        resultGrid.setVgap(6);
+        resultGrid.setVgap(8);
         resultGrid.setPadding(new Insets(10, 0, 10, 0));
 
-        int[] colWidths = {120, 90, 90, 50, 90, 140, 90, 90};
-        for (int w : colWidths) resultGrid.getColumnConstraints().add(colConstraint(w));
+        int[] widths = {120, 90, 80, 50, 90, 140, 90, 90};
+        for (int w : widths) resultGrid.getColumnConstraints().add(colConstraint(w));
 
         for (int i = 0; i < 8; i++) {
             headers[i] = new Label(digitalHeaders[i]);
@@ -298,7 +368,7 @@ public class Main extends Application {
             resultGrid.add(data[i],    i, 1);
         }
 
-        btnTitle.setOnAction(e -> {
+        btnSearch.setOnAction(e -> {
             try {
                 String q = txtTitle.getText().trim();
                 if (q.isEmpty()) { showWarn("Escribe un título para buscar."); return; }
@@ -307,7 +377,7 @@ public class Main extends Application {
                 PhysicalVideoGame ph = videoGameService.findPhysicalByTitle(q);
 
                 if (dg != null) {
-                    typeLabel.setText("Tipo: Digital");
+                    typeLabel.setText("Resultado — Tipo: Digital");
                     for (int i = 0; i < 8; i++) headers[i].setText(digitalHeaders[i]);
                     data[0].setText(dg.getTitle());
                     data[1].setText(dg.getPlatform());
@@ -319,7 +389,7 @@ public class Main extends Application {
                     data[7].setText("$" + dg.calculateFinalPrice());
                     noResult.setText("");
                 } else if (ph != null) {
-                    typeLabel.setText("Tipo: Físico");
+                    typeLabel.setText("Resultado — Tipo: Físico");
                     for (int i = 0; i < 8; i++) headers[i].setText(physicalHeaders[i]);
                     data[0].setText(ph.getTitle());
                     data[1].setText(ph.getPlatform());
@@ -338,78 +408,77 @@ public class Main extends Application {
             } catch (Exception ex) { showError("Error en búsqueda", ex.getMessage()); }
         });
 
-        Label lblPlat      = new Label("Buscar por plataforma:");
-        TextField txtPlat  = new TextField();
-        txtPlat.setPromptText("Ej: PS5, Switch, PC");
-        txtPlat.setPrefWidth(300);
-        Button btnPlat     = new Button("Buscar");
-        Label noPlatResult = new Label("");
+        VBox tab = new VBox(10, lbl, new HBox(8, txtTitle, btnSearch), typeLabel, resultGrid, noResult);
+        tab.setPadding(new Insets(12));
+        return tab;
+    }
 
-        ObservableList<String[]> platResults = FXCollections.observableArrayList();
-        TableView<String[]> platTable = new TableView<>(platResults);
-        platTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        platTable.setPrefHeight(180);
+    private VBox buildSearchByPlatformTab() {
+        Label lbl         = new Label("Búsqueda por Plataforma:");
+        TextField txtPlat = new TextField();
+        txtPlat.setPromptText("Ej: PS5, Switch, PC");
+        txtPlat.setPrefWidth(320);
+        Button btnSearch  = new Button("Buscar por Plataforma");
+        Label noResult    = new Label("");
+
+        ObservableList<String[]> results = FXCollections.observableArrayList();
+        TableView<String[]> table = new TableView<>(results);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         String[] platCols = {"Tipo", "Título", "Plataforma", "Género", "Stock", "Precio Final"};
         for (int i = 0; i < platCols.length; i++) {
             final int idx = i;
             TableColumn<String[], String> tc = new TableColumn<>(platCols[i]);
             tc.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue()[idx]));
-            platTable.getColumns().add(tc);
+            table.getColumns().add(tc);
         }
 
-        btnPlat.setOnAction(e -> {
+        btnSearch.setOnAction(e -> {
             try {
                 String q = txtPlat.getText().trim();
                 if (q.isEmpty()) { showWarn("Escribe una plataforma para buscar."); return; }
-                platResults.clear();
+                results.clear();
                 boolean found = false;
                 for (DigitalVideoGame g : videoGameService.getAllDigital()) {
                     if (g.getPlatform().equalsIgnoreCase(q)) {
-                        platResults.add(new String[]{"Digital", g.getTitle(), g.getPlatform(),
+                        results.add(new String[]{"Digital", g.getTitle(), g.getPlatform(),
                                 g.getGenre(), String.valueOf(g.getStock()), "$" + g.calculateFinalPrice()});
                         found = true;
                     }
                 }
                 for (PhysicalVideoGame g : videoGameService.getAllPhysical()) {
                     if (g.getPlatform().equalsIgnoreCase(q)) {
-                        platResults.add(new String[]{"Físico", g.getTitle(), g.getPlatform(),
+                        results.add(new String[]{"Físico", g.getTitle(), g.getPlatform(),
                                 g.getGenre(), String.valueOf(g.getStock()), "$" + g.calculateFinalPrice()});
                         found = true;
                     }
                 }
-                noPlatResult.setText(found ? "" : "No se encontraron juegos para esa plataforma.");
+                noResult.setText(found ? "" : "No se encontraron juegos para esa plataforma.");
             } catch (Exception ex) { showError("Error en búsqueda", ex.getMessage()); }
         });
 
-        VBox tab = new VBox(8,
-                lblTitle, new HBox(8, txtTitle, btnTitle),
-                typeLabel, resultGrid, noResult,
-                new Separator(),
-                lblPlat, new HBox(8, txtPlat, btnPlat),
-                noPlatResult, platTable
-        );
+        VBox tab = new VBox(10, lbl, new HBox(8, txtPlat, btnSearch), noResult, table);
+        VBox.setVgrow(table, Priority.ALWAYS);
         tab.setPadding(new Insets(12));
-        VBox.setVgrow(platTable, Priority.ALWAYS);
         return tab;
     }
-
-    private VBox buildSalesTab() {
-        Label lblSell = new Label("Realizar venta:");
-
+    private VBox buildSellTab() {
+        Label lblTitle  = new Label("Título del videojuego:");
         TextField txtGame = new TextField();
         txtGame.setPromptText("Título del videojuego");
-        txtGame.setPrefWidth(240);
+        txtGame.setPrefWidth(260);
 
+        Label lblQty    = new Label("Cantidad:");
         TextField txtQty = new TextField();
         txtQty.setPromptText("Cantidad");
-        txtQty.setPrefWidth(90);
+        txtQty.setPrefWidth(100);
 
+        Label lblType   = new Label("Tipo:");
         ComboBox<String> cmbType = new ComboBox<>();
         cmbType.getItems().addAll("Digital", "Físico");
         cmbType.setValue("Digital");
 
-        Button btnSell = new Button("Vender");
+        Button btnSell = new Button("Realizar Venta");
 
         btnSell.setOnAction(e -> {
             try {
@@ -425,8 +494,7 @@ public class Main extends Application {
                         : saleService.sellPhysicalVideoGame(title, qty, saleId);
 
                 if (sale != null) {
-                    showInfo("Venta realizada.\n\n" + sale.toString());
-                    refreshSales();
+                    showInfo("Venta realizada correctamente.\n\n" + sale.toString());
                     refreshDigital();
                     refreshPhysical();
                     txtGame.clear();
@@ -439,11 +507,20 @@ public class Main extends Application {
             }
         });
 
-        HBox sellRow = new HBox(8, txtGame, cmbType, txtQty, btnSell);
-        sellRow.setAlignment(Pos.CENTER_LEFT);
+        GridPane form = new GridPane();
+        form.setHgap(10); form.setVgap(12);
+        form.setPadding(new Insets(14));
+        form.add(lblTitle,  0, 0); form.add(txtGame,  1, 0);
+        form.add(lblType,   0, 1); form.add(cmbType,  1, 1);
+        form.add(lblQty,    0, 2); form.add(txtQty,   1, 2);
+        form.add(btnSell,   1, 3);
 
-        Label lblList = new Label("Historial de ventas:");
+        VBox tab = new VBox(10, new Label("Datos de la Venta:"), form);
+        tab.setPadding(new Insets(12));
+        return tab;
+    }
 
+    private VBox buildSalesTab() {
         TableView<Sale> salesTable = new TableView<>();
         salesTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -458,32 +535,17 @@ public class Main extends Application {
         salesTable.getColumns().addAll(colId, colGame, colType, colQty, colUnit, colTotal, colDate);
 
         salesList = FXCollections.observableArrayList();
-        refreshSales();
         salesTable.setItems(salesList);
 
-        Button btnDeleteSale = new Button("Eliminar Venta");
-        Button btnRefresh    = new Button("Refrescar");
-
-        btnDeleteSale.setOnAction(e -> {
-            Sale sel = salesTable.getSelectionModel().getSelectedItem();
-            if (sel == null) { showWarn("Selecciona una venta para eliminar."); return; }
-            confirmDelete("la venta " + sel.getId(), () -> {
-                try {
-                    if (saleService.deleteSale(sel.getId()))
-                    { showInfo("Venta eliminada."); refreshSales(); }
-                    else showWarn("No se encontró la venta.");
-                } catch (Exception ex) { showError("Error al eliminar", ex.getMessage()); }
-            });
+        Button btnMostrar = new Button("Mostrar Todas las Ventas");
+        btnMostrar.setOnAction(e -> {
+            try { salesList.setAll(saleService.getAllSales()); }
+            catch (Exception ex) { showError("Error al cargar ventas", ex.getMessage()); }
         });
 
-        btnRefresh.setOnAction(e -> refreshSales());
-
-        HBox toolbar = new HBox(8, btnDeleteSale, btnRefresh);
-        toolbar.setPadding(new Insets(4, 0, 4, 0));
-
-        VBox tab = new VBox(8, lblSell, sellRow, new Separator(), lblList, toolbar, salesTable);
+        VBox tab = new VBox(8, btnMostrar, salesTable);
         VBox.setVgrow(salesTable, Priority.ALWAYS);
-        tab.setPadding(new Insets(12));
+        tab.setPadding(new Insets(10));
         return tab;
     }
 
@@ -495,11 +557,6 @@ public class Main extends Application {
     private void refreshPhysical() {
         try { physicalList.setAll(videoGameService.getAllPhysical()); }
         catch (Exception e) { showError("Error al cargar físicos", e.getMessage()); }
-    }
-
-    private void refreshSales() {
-        try { salesList.setAll(saleService.getAllSales()); }
-        catch (Exception e) { showError("Error al cargar ventas", e.getMessage()); }
     }
 
     private <T, V> TableColumn<T, V> col(String label, String property) {
@@ -565,5 +622,7 @@ public class Main extends Application {
         a.showAndWait();
     }
 
-    public static void main(String[] args) { launch(args); }
+    public static void main(String[] args) {
+        launch(args);
+    }
 }

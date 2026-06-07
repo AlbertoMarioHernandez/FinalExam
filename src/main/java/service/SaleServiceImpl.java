@@ -25,8 +25,7 @@ public class SaleServiceImpl implements ISaleService {
         }
 
         if (game.getStock() < quantity) {
-            showAlert("Stock insuficiente",
-                    "Stock disponible: " + game.getStock() + ". Cantidad solicitada: " + quantity + ".");
+            showAlert("Stock insuficiente", "Stock disponible: " + game.getStock() + ". Cantidad solicitada: " + quantity + ".");
             return null;
         }
 
@@ -67,17 +66,6 @@ public class SaleServiceImpl implements ISaleService {
     public ArrayList<Sale> getAllSales() {
         return saleRepository.getAll();
     }
-
-    @Override
-    public Sale findSaleById(String id) {
-        return saleRepository.findById(id);
-    }
-
-    @Override
-    public boolean deleteSale(String id) {
-        return saleRepository.delete(id);
-    }
-
     private void showAlert(String header, String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING, message, ButtonType.OK);
         alert.setHeaderText(header);

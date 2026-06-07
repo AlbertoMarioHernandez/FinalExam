@@ -14,9 +14,7 @@ public class VideoGameRepository {
     private static final String PATH = "data/data.json";
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    // ================================================================
-    //  BASE JSON FUNCTIONS
-    // ================================================================
+
 
     private JsonObject readJson() {
         File file = new File(PATH);
@@ -53,9 +51,7 @@ public class VideoGameRepository {
         return false;
     }
 
-    // ================================================================
-    //  INTERNAL WRITE
-    // ================================================================
+
 
     private void writeJson(JsonObject root) {
         File file = new File(PATH);
@@ -75,9 +71,7 @@ public class VideoGameRepository {
         return obj;
     }
 
-    // ================================================================
-    //  LOAD ARRAYLISTS FROM JSON
-    // ================================================================
+
 
     private ArrayList<DigitalVideoGame> loadDigital() {
         JsonObject root = readJson();
@@ -93,9 +87,7 @@ public class VideoGameRepository {
         return list != null ? list : new ArrayList<>();
     }
 
-    // ================================================================
-    //  DIGITAL OPERATIONS
-    // ================================================================
+
 
     public ArrayList<DigitalVideoGame> getAllDigital() {
         return loadDigital();
@@ -128,9 +120,6 @@ public class VideoGameRepository {
         return null;
     }
 
-    // ================================================================
-    //  PHYSICAL OPERATIONS
-    // ================================================================
 
     public ArrayList<PhysicalVideoGame> getAllPhysical() {
         return loadPhysical();

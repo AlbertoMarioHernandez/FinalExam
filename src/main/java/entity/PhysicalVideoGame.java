@@ -33,20 +33,6 @@ public class PhysicalVideoGame extends VideoGame {
 
     }
 
-    public double sell(int qty) {
-        if (qty > stock) throw new IllegalArgumentException("Stock insuficiente");
-        stock -= qty;
-        return calculateFinalPrice() * qty;
-    }
-
-    public String getDisplayInfo() {
-        return "Physical | " + title + " | " + platform + " | $" + calculateFinalPrice() + " | Condition: " + condition + " | Distributor: " + distributor;
-    }
-
-    public Object[] toTableRow() {
-        return new Object[]{title, platform, genre, condition, distributor, calculateFinalPrice(), stock};
-    }
-
     @Override
     public String toString() {
         return "PhysicalVideoGame{title='" + title

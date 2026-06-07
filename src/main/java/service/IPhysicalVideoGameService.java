@@ -9,5 +9,5 @@ public interface IPhysicalVideoGameService {
     PhysicalVideoGame findPhysicalByTitle(String title);
     boolean updatePhysicalVideoGame(String title, PhysicalVideoGame updated);
     boolean deletePhysicalVideoGame(String title);
-    double calculateFinalPricePhysical(PhysicalVideoGame game);
+
 }

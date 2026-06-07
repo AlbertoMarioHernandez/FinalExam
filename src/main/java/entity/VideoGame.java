@@ -39,8 +39,10 @@ public abstract class VideoGame {
 
     @Override
     public String toString() {
-        return "VideoGame{title='" + title + "', price=" + price +
-                ", platform='" + platform + "', stock=" + stock +
-                ", genre='" + genre + "'}";
+        return "VideoGame{title='" + title
+                + "', price=" + price +
+                ", platform='" + platform
+                + "', stock=" + stock
+                + ", genre='" + genre + "'}";
     }
 }

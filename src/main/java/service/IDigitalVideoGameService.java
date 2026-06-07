@@ -9,5 +9,5 @@ public interface IDigitalVideoGameService {
     DigitalVideoGame findDigitalByTitle(String title);
     boolean updateDigitalVideoGame(String title, DigitalVideoGame updated);
     boolean deleteDigitalVideoGame(String title);
-    double calculateFinalPriceDigital(DigitalVideoGame game);
+
 }

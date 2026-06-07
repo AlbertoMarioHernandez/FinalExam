@@ -22,13 +22,27 @@ public class Sale {
         this.saleDate       = LocalDateTime.now();
     }
 
-    public String getId()             { return id; }
-    public String getVideoGameTitle() { return videoGameTitle; }
-    public String getVideoGameType()  { return videoGameType; }
-    public int getQuantity()          { return quantity; }
-    public double getUnitPrice()      { return unitPrice; }
-    public double getTotal()          { return total; }
-    public LocalDateTime getSaleDate(){ return saleDate; }
+    public String getId()             {
+        return id;
+    }
+    public String getVideoGameTitle() {
+        return videoGameTitle;
+    }
+    public String getVideoGameType()  {
+        return videoGameType;
+    }
+    public int getQuantity()          {
+        return quantity;
+    }
+    public double getUnitPrice()      {
+        return unitPrice;
+    }
+    public double getTotal()          {
+        return total;
+    }
+    public LocalDateTime getSaleDate(){
+        return saleDate;
+    }
 
     @Override
     public String toString() {

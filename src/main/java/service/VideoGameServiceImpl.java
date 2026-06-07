@@ -11,9 +11,7 @@ public class VideoGameServiceImpl implements IDigitalVideoGameService, IPhysical
 
     private final VideoGameRepository repository = new VideoGameRepository();
 
-    // ================================================================
-    //  SHARED VALIDATIONS
-    // ================================================================
+
 
     private void validateVideoGame(String title, double price, int stock) {
         if (title == null || title.trim().isEmpty())
@@ -31,10 +29,6 @@ public class VideoGameServiceImpl implements IDigitalVideoGameService, IPhysical
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-    // ================================================================
-    //  DIGITAL OPERATIONS
-    // ================================================================
 
     @Override
     public void addDigitalVideoGame(DigitalVideoGame game) {
@@ -68,18 +62,6 @@ public class VideoGameServiceImpl implements IDigitalVideoGameService, IPhysical
     public boolean deleteDigitalVideoGame(String title) {
         return repository.deleteDigital(title);
     }
-
-    // calculateFinalPrice() ya está en la entidad DigitalVideoGame,
-    // el service lo delega directamente al objeto
-    @Override
-    public double calculateFinalPriceDigital(DigitalVideoGame game) {
-        return game.calculateFinalPrice();
-    }
-
-    // ================================================================
-    //  PHYSICAL OPERATIONS
-    // ================================================================
-
     @Override
     public void addPhysicalVideoGame(PhysicalVideoGame game) {
         validateVideoGame(game.getTitle(), game.getPrice(), game.getStock());
@@ -111,12 +93,5 @@ public class VideoGameServiceImpl implements IDigitalVideoGameService, IPhysical
     @Override
     public boolean deletePhysicalVideoGame(String title) {
         return repository.deletePhysical(title);
-    }
-
-    // calculateFinalPrice() ya está en la entidad PhysicalVideoGame,
-    // el service lo delega directamente al objeto
-    @Override
-    public double calculateFinalPricePhysical(PhysicalVideoGame game) {
-        return game.calculateFinalPrice();
     }
 }
