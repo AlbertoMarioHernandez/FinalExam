@@ -27,7 +27,9 @@ public class Main extends Application {
     private ObservableList<DigitalVideoGame>  digitalList;
     private ObservableList<PhysicalVideoGame> physicalList;
     private ObservableList<Sale>              salesList;
-
+    public static void main(String[] args) {
+        launch(args);
+    }
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("GameZone");
@@ -117,8 +119,7 @@ public class Main extends Application {
         TableColumn<PhysicalVideoGame, String>  pColCond     = col("Condición",    "condition");
         TableColumn<PhysicalVideoGame, String>  pColDist     = col("Distribuidor", "distributor");
         TableColumn<PhysicalVideoGame, Double>  pColFinal    = new TableColumn<>("Precio Final");
-        pColFinal.setCellValueFactory(d ->
-                new SimpleDoubleProperty(d.getValue().calculateFinalPrice()).asObject());
+        pColFinal.setCellValueFactory(d -> new SimpleDoubleProperty(d.getValue().calculateFinalPrice()).asObject());
 
         physicalTable.getColumns().addAll(pColTitle, pColPlatform, pColGenre, pColStock, pColCond, pColDist, pColFinal);
         physicalList = FXCollections.observableArrayList();
@@ -154,11 +155,7 @@ public class Main extends Application {
         HBox physicalToolbar = new HBox(8, btnAddPhysical, btnEditPhysical, btnDeletePhysical, btnListPhysical);
         physicalToolbar.setPadding(new Insets(6, 0, 6, 0));
 
-        VBox tab = new VBox(6,
-                lblDigital, digitalToolbar, digitalTable,
-                new Separator(),
-                lblPhysical, physicalToolbar, physicalTable
-        );
+        VBox tab = new VBox(6, lblDigital, digitalToolbar, digitalTable, new Separator(), lblPhysical, physicalToolbar, physicalTable);
         tab.setPadding(new Insets(10));
         return tab;
     }
@@ -571,7 +568,6 @@ public class Main extends Application {
         cc.setPrefWidth(width);
         return cc;
     }
-
     private Stage dialog(javafx.stage.Window owner, String title) {
         Stage s = new Stage();
         s.initOwner(owner);
@@ -580,7 +576,6 @@ public class Main extends Application {
         s.setResizable(false);
         return s;
     }
-
     private TextField field(String value, String prompt) {
         TextField tf = new TextField(value);
         tf.setPromptText(prompt);
@@ -622,7 +617,5 @@ public class Main extends Application {
         a.showAndWait();
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+
 }
